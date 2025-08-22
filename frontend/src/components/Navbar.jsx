@@ -1,18 +1,24 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/Auth/authslice";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import logoImg from "../assets/logo.png";
 
 export default function Navbar() {
-    
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  // Simulate logged in status (replace with real auth logic)
-  const isLoggedIn = true; // change to true after login
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsOpen(false);
+  };
 
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Test Series", path: "/testseries" },
     { name: "Resources", path: "/resources" },
+    { name: "Blogs", path: "/blogs" },
   ];
 
   return (
@@ -30,7 +36,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Menu (only if logged in) */}
-          {isLoggedIn && (
+          {isAuthenticated && (
             <div className="hidden md:flex space-x-6">
               {navLinks.map((link) => (
                 <a
@@ -46,10 +52,19 @@ export default function Navbar() {
 
           {/* Right Side (Login/Profile) */}
           <div className="hidden md:flex">
-            {isLoggedIn ? (
-              <a href="/profile" className="text-gray-700 hover:text-blue-600">
-                <FaUserCircle size={28} />
-              </a>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-700 text-sm">Hi, {user?.name || 'User'}</span>
+                <a href="/profile" className="text-gray-700 hover:text-blue-600">
+                  <FaUserCircle size={28} />
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-700 hover:text-red-600 text-sm font-medium"
+                >
+                  Logout
+                </button>
+              </div>
             ) : (
               <a
                 href="/auth"
@@ -72,7 +87,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg border-t">
-          {isLoggedIn && navLinks.map((link) => (
+          {isAuthenticated && navLinks.map((link) => (
             <a
               key={link.name}
               href={link.path}
@@ -83,14 +98,22 @@ export default function Navbar() {
             </a>
           ))}
 
-          {isLoggedIn ? (
-            <a
-              href="/profile"
-              className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-              onClick={() => setIsOpen(false)}
-            >
-              Profile
-            </a>
+          {isAuthenticated ? (
+            <>
+              <a
+                href="/profile"
+                className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+                onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </a>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition"
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <a
               href="/auth"

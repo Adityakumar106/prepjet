@@ -1,9 +1,16 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginStart, loginSuccess, loginFailure } from "../redux/Auth/authslice";
+import { authAPI } from "../api";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.auth);
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
@@ -16,12 +23,26 @@ export default function AuthPage() {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Logging in:", loginData);
-    } else {
-      console.log("Signing up:", signupData);
+    dispatch(loginStart());
+
+    try {
+      let response;
+      if (isLogin) {
+        response = await authAPI.login(loginData);
+      } else {
+        response = await authAPI.signup(signupData);
+      }
+
+      dispatch(loginSuccess({
+        user: response.data.user || { email: loginData.email || signupData.email },
+        token: response.data.token
+      }));
+
+      navigate('/');
+    } catch (error) {
+      dispatch(loginFailure(error.response?.data?.message || 'Authentication failed'));
     }
   };
 
@@ -60,6 +81,12 @@ export default function AuthPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+
           {!isLogin && (
             <input
               type="text"
@@ -106,9 +133,10 @@ export default function AuthPage() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200"
           >
-            {isLogin ? "Login" : "Signup"}
+            {loading ? "Please wait..." : (isLogin ? "Login" : "Signup")}
           </button>
         </form>
 
