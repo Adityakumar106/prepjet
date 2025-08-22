@@ -5,6 +5,8 @@ import { loginStart, loginSuccess, loginFailure } from "../redux/Auth/authslice"
 import { authAPI } from "../api";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -82,9 +84,7 @@ export default function AuthPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
+            <ErrorMessage message={error} />
           )}
 
           {!isLogin && (
@@ -134,9 +134,16 @@ export default function AuthPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200"
+            className="w-full bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all duration-200 flex items-center justify-center"
           >
-            {loading ? "Please wait..." : (isLogin ? "Login" : "Signup")}
+            {loading ? (
+              <>
+                <LoadingSpinner size="sm" color="white" />
+                <span className="ml-2">Please wait...</span>
+              </>
+            ) : (
+              isLogin ? "Login" : "Signup"
+            )}
           </button>
         </form>
 

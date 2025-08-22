@@ -1,7 +1,6 @@
 
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import heroImg from "../assets/easily.png"; // Use the image we made earlier
 import { BookOpen, Award, Users, TrendingUp } from "lucide-react";
 import Footer from "../components/footer";
 
@@ -116,11 +115,14 @@ export default function HomePage() {
           </div>
           {/* Image */}
           <div className="md:w-1/2 mt-10 md:mt-0">
-            <img
-              src={heroImg}
-              alt="JetPrep Hero"
-              className="rounded-2xl shadow-2xl w-full object-cover transform hover:scale-105 transition duration-500"
-            />
+            <div className="relative">
+              <img
+                src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="JetPrep Hero"
+                className="rounded-2xl shadow-2xl w-full object-cover transform hover:scale-105 transition duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Pages
 import Home from "./Pages/Homepage";
@@ -38,15 +39,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/testseries" element={<TestSeriesPage />} />
-          <Route path="/test-series/:id" element={<TestSeriesDetail />} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
+          <Route path="/testseries" element={<ProtectedRoute><TestSeriesPage /></ProtectedRoute>} />
+          <Route path="/test-series/:id" element={<ProtectedRoute><TestSeriesDetail /></ProtectedRoute>} />
            <Route path="/forgetpassword" element={<Forgotpasswordpage />} /> {/* ✅ Add Forgot Password Route */}
            <Route path="/updatepassword" element={<UpdatePasswordPage />} /> {/* ✅ Add Update Password Route */}
 
           {/* Blogs */}
-          <Route path="/blogs" element={<BlogsPage />} />
+          <Route path="/blogs" element={<ProtectedRoute><BlogsPage /></ProtectedRoute>} />
           <Route path="/blogs/:id" element={<BlogDetails />} />
 
           {/* Static Pages */}
@@ -56,9 +57,9 @@ function App() {
           <Route path="/faq" element={<FAQs />} />
 
           {/* Tests */}
-          <Route path="/test/:seriesId/:testId/instructions"  element={<TestInstructions />} />
-          <Route path="/test/:seriesId/:testId" element={<NewTestAttemptPage />} />
-          <Route path="/test/result" element={<TestResult />} />
+          <Route path="/test/:seriesId/:testId/instructions" element={<ProtectedRoute><TestInstructions /></ProtectedRoute>} />
+          <Route path="/test/:seriesId/:testId" element={<ProtectedRoute><NewTestAttemptPage /></ProtectedRoute>} />
+          <Route path="/test/result" element={<ProtectedRoute><TestResult /></ProtectedRoute>} />
           { /* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             

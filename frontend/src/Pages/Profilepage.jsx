@@ -6,12 +6,12 @@ import { Camera, Edit3, Save, X } from "lucide-react";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user: authUser } = useSelector((state) => state.auth);
   
-  const [user, setUser] = useState(
+  const [userProfile, setUserProfile] = useState(
     {
-      name: user?.name || "John Doe",
-      email: user?.email || "john@example.com",
+      name: authUser?.name || "John Doe",
+      email: authUser?.email || "john@example.com",
       about: "Aspiring civil servant preparing for UPSC 2025",
       preparingFor: "UPSC Civil Services",
       purchasedTests: ["SSC CGL 2025", "UPSC Prelims 2025"],
@@ -25,7 +25,7 @@ export default function ProfilePage() {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setUser({ ...user, avatar: imageUrl });
+      setUserProfile({ ...userProfile, avatar: imageUrl });
     }
   };
 
@@ -46,9 +46,9 @@ export default function ProfilePage() {
           {/* Profile Header */}
           <div className="flex flex-col items-center relative">
             <div className="relative">
-              {user.avatar ? (
+              {userProfile.avatar ? (
                 <img
-                  src={user.avatar}
+                  src={userProfile.avatar}
                   alt="Profile"
                   className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg"
                 />
@@ -75,18 +75,18 @@ export default function ProfilePage() {
               <div className="mt-6 w-full max-w-md space-y-4">
                 <input
                   type="text"
-                  value={user.name}
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  value={userProfile.name}
+                  onChange={(e) => setUserProfile({ ...userProfile, name: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Full Name"
                 />
               </div>
             ) : (
               <>
-                <h2 className="mt-6 text-3xl font-bold text-gray-800">{user.name}</h2>
-                <p className="text-gray-600 text-lg">{user.email}</p>
+                <h2 className="mt-6 text-3xl font-bold text-gray-800">{userProfile.name}</h2>
+                <p className="text-gray-600 text-lg">{userProfile.email}</p>
                 <div className="mt-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {user.preparingFor}
+                  {userProfile.preparingFor}
                 </div>
               </>
             )}
@@ -110,14 +110,14 @@ export default function ProfilePage() {
             </div>
             {isEditing ? (
               <textarea
-                value={user.about}
-                onChange={(e) => setUser({ ...user, about: e.target.value })}
+                value={userProfile.about}
+                onChange={(e) => setUserProfile({ ...userProfile, about: e.target.value })}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows="4"
                 placeholder="Tell us about yourself..."
               />
             ) : (
-              <p className="text-gray-700 leading-relaxed">{user.about}</p>
+              <p className="text-gray-700 leading-relaxed">{userProfile.about}</p>
             )}
 
             {isEditing && (
@@ -127,8 +127,8 @@ export default function ProfilePage() {
                 </label>
                 <input
                   type="text"
-                  value={user.preparingFor}
-                  onChange={(e) => setUser({ ...user, preparingFor: e.target.value })}
+                  value={userProfile.preparingFor}
+                  onChange={(e) => setUserProfile({ ...userProfile, preparingFor: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., UPSC Civil Services"
                 />
@@ -139,9 +139,9 @@ export default function ProfilePage() {
           {/* Purchased Test Series Card */}
           <div className="bg-white shadow-lg rounded-2xl p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">My Test Series</h3>
-            {user.purchasedTests.length > 0 ? (
+            {userProfile.purchasedTests.length > 0 ? (
               <div className="space-y-3">
-                {user.purchasedTests.map((test, index) => (
+                {userProfile.purchasedTests.map((test, index) => (
                   <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
                     <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
                     <span className="text-gray-800 font-medium">{test}</span>
@@ -152,12 +152,12 @@ export default function ProfilePage() {
               <div className="text-center py-8">
                 <div className="text-gray-400 mb-2">📚</div>
                 <p className="text-gray-500">No test series purchased yet</p>
-                <a
-                  href="/testseries"
+                <Link
+                  to="/testseries"
                   className="inline-block mt-3 text-blue-600 hover:text-blue-800 font-medium"
                 >
                   Browse Test Series →
-                </a>
+                </Link>
               </div>
             )}
           </div>
